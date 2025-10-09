@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Gothic_A1 } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const gothicA1 = Gothic_A1({
+  variable: "--font-gothic-a1",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "700"], // choose weights you need
 });
 
 export const metadata: Metadata = {
@@ -24,10 +21,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+      <body className={`${gothicA1.variable}  antialiased`}>
+        <div className="relative bg-[url('/bg/space_bg.gif')] bg-cover bg-center bg-no-repeat overflow-hidden">
+  <Navbar />
+  {children}
+</div>
+
       </body>
     </html>
   );
