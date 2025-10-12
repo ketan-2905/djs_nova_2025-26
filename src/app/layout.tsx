@@ -22,11 +22,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${gothicA1.variable}  antialiased`}>
-        <div className="relative bg-[url('/bg/space_bg.gif')] bg-cover bg-center bg-no-repeat overflow-hidden">
-  <Navbar />
-  {children}
-</div>
-
+        <div className="relative bg-[url('/bg/space_bg.gif')] bg-auto bg-repeat bg-left-top overflow-hidden">
+          <Navbar />
+          {children}
+        </div>
       </body>
     </html>
   );
