@@ -16,7 +16,7 @@ const IntroOverlay = () => {
   return (
     <div className="overlay">
       <div className="typewriter">
-        <h1>#chaosInClam</h1>
+        <h1>#chaosInCalm</h1>
       </div>
     </div>
   );
