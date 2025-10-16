@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Gothic_A1 } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import IntroOverlay from "@/components/IntroOverlay";
 
 const gothicA1 = Gothic_A1({
   variable: "--font-gothic-a1",
@@ -22,7 +23,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${gothicA1.variable}  antialiased`}>
-        <div className="relative bg-[url('/bg/space_bg.gif')] bg-auto bg-repeat bg-left-top overflow-hidden">
+        <div className="relative bg-[url('/bg/space_bg.gif')] bg-auto bg-repeat bg-left-top overflow-hidden px-8">
+        <IntroOverlay />
           <Navbar />
           {children}
         </div>

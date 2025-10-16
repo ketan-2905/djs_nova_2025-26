@@ -3,7 +3,8 @@ import EarthMoonScene from "./ThreeDComponent";
 import TiltedSolarSystem from "./ThreeDSolarSystem";
 import SolarSystem from "./ThreeDSolarSystem";
 
-const HeroComponent = () => {
+const HeroComponent2
+ = () => {
   return (
     <div className="mt-20 min-h-[calc(100vh-80px)] flex tracking-[0.25em]">
       <div className="w-1/2 flex justify-center px-16 flex-col">
@@ -16,12 +17,13 @@ const HeroComponent = () => {
         </div>
       </div>
       <div className="w-1/2 h-[calc(100vh-80px)] relative">
-        {/* <EarthMoonScene /> */}
-        <TiltedSolarSystem />
+        <EarthMoonScene />
+        {/* <TiltedSolarSystem /> */}
         {/* <SolarSystem /> */}
       </div>
     </div>
   );
 };
 
-export default HeroComponent;
+export default HeroComponent2
+;

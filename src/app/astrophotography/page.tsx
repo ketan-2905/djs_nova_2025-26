@@ -1,11 +1,11 @@
 import AboutUs from "@/components/AboutUs";
 import AstroPhotography from "@/components/AstroPhotography";
-import HeroComponent from "@/components/HeroComponent";
+import HeroComponent2 from "@/components/HeroComponent2";
 
-export default function Home() {
+export default function Astrophotography() {
   return (
     <>
-      <HeroComponent />
+      <HeroComponent2 />
       <AboutUs />
       <AstroPhotography />
     </>

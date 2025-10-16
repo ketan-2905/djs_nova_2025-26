@@ -54,7 +54,7 @@ const Navbar = () => {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 ">
-      <div className="max-w-7xl mx-auto flex justify-between items-center px-8 py-4 h-20 text-white">
+      <div className="max-w-7xl mx-auto flex justify-between items-center  py-4 h-20 text-white">
         {/* Logo Section */}
         <div className="flex items-center gap-3 text-2xl font-light tracking-[0.25em]">
           <Image src="/logo/nova_logo.png" alt="NOVA_LOGO" width={60} height={60} />
