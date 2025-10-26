@@ -365,34 +365,46 @@ export default function EarthMoonScene() {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (!mountRef.current) return;
+useEffect(() => {
+  if (!mountRef.current) return;
 
-    const width = mountRef.current.clientWidth;
-    const height = mountRef.current.clientHeight;
+  const container = mountRef.current;
+
+  const setupScene = () => {
+    const width = container.clientWidth;
+    const height = container.clientHeight;
+    if (height === 0) return; // Wait until container has real height
 
     // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.z = 15;
+    // Adjust camera distance so the sphere fits in view
+const sphereRadius = 2; // same as your geometry
+const fov = camera.fov * (Math.PI / 180);
+const aspect = width / height;
 
-    const renderer = new THREE.WebGLRenderer({ 
-      antialias: true, 
+// Calculate distance from camera to fully fit sphere vertically or horizontally
+const fitHeightDistance = sphereRadius / Math.sin(fov / 2);
+const fitWidthDistance = sphereRadius / (Math.sin(fov / 2) * aspect);
+
+// Use the larger one to ensure full visibility
+camera.position.z = Math.max(fitHeightDistance, fitWidthDistance) * 1.1; // 1.1 adds slight padding
+
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
       alpha: true,
       powerPreference: "high-performance"
     });
-    
-    // Set renderer size to match container exactly
+
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    
-    // Clear existing content and append renderer
-    mountRef.current.innerHTML = '';
-    mountRef.current.appendChild(renderer.domElement);
 
-    // Lighting setup
+    container.innerHTML = "";
+    container.appendChild(renderer.domElement);
+
     const sunLight = new THREE.DirectionalLight(0xffffff, 2.5);
     sunLight.position.set(5, 3, 5);
     sunLight.castShadow = true;
@@ -405,21 +417,20 @@ export default function EarthMoonScene() {
     rimLight.position.set(-5, 0, -5);
     scene.add(rimLight);
 
-    // Create Earth
-    const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
     const textureLoader = new THREE.TextureLoader();
-    
+
+    const earthGeometry = new THREE.SphereGeometry(2, 64, 64);
     const earthMaterial = new THREE.MeshPhongMaterial({
       map: textureLoader.load(
-        'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg',
+        "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_atmos_2048.jpg",
         () => setLoading(false)
       ),
       bumpMap: textureLoader.load(
-        'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg'
+        "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_normal_2048.jpg"
       ),
       bumpScale: 0.05,
       specularMap: textureLoader.load(
-        'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg'
+        "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/earth_specular_2048.jpg"
       ),
       specular: new THREE.Color(0x333333),
       shininess: 25
@@ -430,11 +441,10 @@ export default function EarthMoonScene() {
     earth.receiveShadow = true;
     scene.add(earth);
 
-    // Create Moon - SMALLER orbit for better visibility
-    const moonGeometry = new THREE.SphereGeometry(0.4, 32, 32); // Smaller moon
+    const moonGeometry = new THREE.SphereGeometry(0.4, 32, 32);
     const moonMaterial = new THREE.MeshPhongMaterial({
       map: textureLoader.load(
-        'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg'
+        "https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/planets/moon_1024.jpg"
       ),
       shininess: 5
     });
@@ -444,7 +454,6 @@ export default function EarthMoonScene() {
     moon.receiveShadow = true;
     scene.add(moon);
 
-    // Atmosphere glow
     const glowGeometry = new THREE.SphereGeometry(2.1, 32, 32);
     const glowMaterial = new THREE.ShaderMaterial({
       uniforms: {
@@ -476,14 +485,12 @@ export default function EarthMoonScene() {
     const earthGlow = new THREE.Mesh(glowGeometry, glowMaterial);
     earth.add(earthGlow);
 
-    // Animation variables - REDUCED ORBIT RADIUS
     let moonAngle = 0;
-    const moonOrbitRadius = 4; // Reduced from 6 to keep moon in view
+    const moonOrbitRadius = 4;
     const moonOrbitSpeed = 0.005;
     const earthRotationSpeed = 0.001;
     const moonRotationSpeed = 0.002;
 
-    // Earth rotation control
     let isDragging = false;
     let previousMousePosition = { x: 0, y: 0 };
     const earthRotation = { x: 0, y: 0 };
@@ -495,28 +502,23 @@ export default function EarthMoonScene() {
 
     const handleMouseMove = (event: MouseEvent) => {
       if (!isDragging) return;
-
       const deltaMove = {
         x: event.clientX - previousMousePosition.x,
         y: event.clientY - previousMousePosition.y
       };
-
       earthRotation.y += deltaMove.x * 0.01;
       earthRotation.x += deltaMove.y * 0.01;
       earthRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, earthRotation.x));
       previousMousePosition = { x: event.clientX, y: event.clientY };
     };
 
-    const handleMouseUp = () => {
-      isDragging = false;
-    };
+    const handleMouseUp = () => (isDragging = false);
 
     const canvas = renderer.domElement;
-    canvas.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseup', handleMouseUp);
+    canvas.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
 
-    // Touch events
     const handleTouchStart = (event: TouchEvent) => {
       if (event.touches.length === 1) {
         isDragging = true;
@@ -542,73 +544,83 @@ export default function EarthMoonScene() {
       };
     };
 
-    const handleTouchEnd = () => {
-      isDragging = false;
-    };
+    const handleTouchEnd = () => (isDragging = false);
 
-    canvas.addEventListener('touchstart', handleTouchStart);
-    window.addEventListener('touchmove', handleTouchMove);
-    window.addEventListener('touchend', handleTouchEnd);
+    canvas.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("touchend", handleTouchEnd);
 
-    // Animation loop
     function animate() {
       requestAnimationFrame(animate);
 
-      // Apply Earth rotation
       earth.rotation.x = earthRotation.x;
       earth.rotation.y = earthRotation.y;
 
-      // Automatic rotation when not dragging
       if (!isDragging) {
         earth.rotation.y += earthRotationSpeed;
         earthRotation.y += earthRotationSpeed;
       }
 
-      // Moon orbit - SMALLER ORBIT
       moonAngle += moonOrbitSpeed;
       moon.position.x = Math.cos(moonAngle) * moonOrbitRadius;
       moon.position.z = Math.sin(moonAngle) * moonOrbitRadius;
       moon.rotation.y += moonRotationSpeed;
 
-      // Update atmosphere
       glowMaterial.uniforms.viewVector.value.copy(camera.position);
-
       renderer.render(scene, camera);
     }
 
     animate();
 
-    // Handle resize
     const handleResize = () => {
-      if (!mountRef.current) return;
-      const newWidth = mountRef.current.clientWidth;
-      const newHeight = mountRef.current.clientHeight;
-      
+      if (!container) return;
+      const newWidth = container.clientWidth;
+      const newHeight = container.clientHeight;
       camera.aspect = newWidth / newHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(newWidth, newHeight);
+camera.updateProjectionMatrix();
+
+const fov = camera.fov * (Math.PI / 180);
+const aspect = newWidth / newHeight;
+const sphereRadius = 2;
+const fitHeightDistance = sphereRadius / Math.sin(fov / 2);
+const fitWidthDistance = sphereRadius / (Math.sin(fov / 2) * aspect);
+camera.position.z = Math.max(fitHeightDistance, fitWidthDistance) * 1.1;
+
+renderer.setSize(newWidth, newHeight);
+
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
-    // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
-      
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      canvas.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchend", handleTouchEnd);
+      canvas.removeEventListener("mousedown", handleMouseDown);
+      canvas.removeEventListener("touchstart", handleTouchStart);
 
-      if (mountRef.current && renderer.domElement.parentNode === mountRef.current) {
-        mountRef.current.removeChild(renderer.domElement);
+      if (container && renderer.domElement.parentNode === container) {
+        container.removeChild(renderer.domElement);
       }
 
       renderer.dispose();
     };
-  }, []);
+  };
+
+  const observer = new ResizeObserver(() => {
+    if (container.clientHeight > 0) {
+      setupScene();
+      observer.disconnect();
+    }
+  });
+
+  observer.observe(container);
+
+  return () => observer.disconnect();
+}, []);
+
 
   return (
     <div className="relative w-full h-full bg-transparent">

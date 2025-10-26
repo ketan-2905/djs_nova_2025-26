@@ -1,13 +1,10 @@
-import AboutUs from "@/components/AboutUs";
-import AstroPhotography from "@/components/AstroPhotography";
-import HeroComponent2 from "@/components/HeroComponent2";
+import Astrophotography from "@/components/Astrophotography";
 
-export default function Astrophotography() {
+
+export default function AstrophotographyPage() {
   return (
     <>
-      <HeroComponent2 />
-      <AboutUs />
-      <AstroPhotography />
+    <Astrophotography />
     </>
   );
 }

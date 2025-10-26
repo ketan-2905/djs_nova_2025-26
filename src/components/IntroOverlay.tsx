@@ -7,7 +7,7 @@ const IntroOverlay = () => {
 
   useEffect(() => {
     // Total time = typing duration + pause before fade
-    const timer = setTimeout(() => setShow(false), 5000); // 3.5s typing + extra pause
+    const timer = setTimeout(() => setShow(false), 3500); // 3.5s typing + extra pause
     return () => clearTimeout(timer);
   }, []);
 
@@ -16,7 +16,7 @@ const IntroOverlay = () => {
   return (
     <div className="overlay">
       <div className="typewriter">
-        <h1>#chaosInCalm</h1>
+        <h1>Chaos in calm....</h1>
       </div>
     </div>
   );

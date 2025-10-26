@@ -1,8 +1,52 @@
 import type { Metadata } from "next";
-import { Gothic_A1 } from "next/font/google";
+import { Gothic_A1, Poppins, Roboto, Bokor, } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import IntroOverlay from "@/components/IntroOverlay";
+import localFont from 'next/font/local';
+import Footer from "@/components/Footer";
+
+// Configure the font loader function
+// You must specify the 'weight' array for non-variable Google Fonts like Poppins,
+// or use a variable font for better performance and flexibility.
+
+
+const myLocalFont = localFont({
+  src: [
+    {
+      path: '../../public/fonts/BBHSansBartle-Regular.ttf', 
+      weight: '200', 
+      style: 'normal',
+    },
+  ],
+});
+
+const myLocalFontTwo = localFont({
+  src: [
+    {
+      path: '../../public/fonts/BBHSansBogle-Regular.ttf', 
+      weight: '200', 
+      style: 'normal',
+    },
+  ],
+});
+
+const bokor = Bokor({
+  weight: ["400"],
+  subsets: ["latin"],
+});
+
+const roboto = Roboto({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
+});
+
+const poppins = Poppins({
+  weight: ["400", "600", "700"],
+  subsets: ["latin"],
+});
 
 const gothicA1 = Gothic_A1({
   variable: "--font-gothic-a1",
@@ -22,11 +66,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${gothicA1.variable}  antialiased`}>
-        <div className="relative bg-[url('/bg/space_bg.gif')] bg-auto bg-repeat bg-left-top overflow-hidden px-8">
-        <IntroOverlay />
-          <Navbar />
-          {children}
+      <body className={`${gothicA1.className}  antialiased`}>
+        <div className="relative bg-[url('/bg/space_bg.gif')] bg-auto bg-repeat bg-left-top overflow-hidden ">
+        {/* <IntroOverlay /> */}
+        <Navbar />
+        {children}
+      <Footer />
         </div>
       </body>
     </html>
