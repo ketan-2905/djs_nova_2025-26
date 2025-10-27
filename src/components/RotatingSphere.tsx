@@ -196,8 +196,8 @@
 
 "use client";
 
-import React, { useEffect, useRef, useState } from 'react';
-import * as THREE from 'three';
+import React, { useEffect, useRef, useState } from "react";
+import * as THREE from "three";
 
 interface RotatableSphereProps {
   textureUrl: string;
@@ -218,7 +218,7 @@ export default function RotatableSphere({
   sphereRadius = 1.5,
   width = "100%",
   height = "400px",
-  className = ""
+  className = "",
 }: RotatableSphereProps) {
   const mountRef = useRef<HTMLDivElement>(null);
   const [loading, setLoading] = useState(true);
@@ -235,7 +235,7 @@ export default function RotatableSphere({
 
       // Scene setup
       const scene = new THREE.Scene();
-      
+
       // Calculate camera position based on sphere radius to ensure it fits perfectly
       const cameraDistance = sphereRadius * 3.5;
       const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
@@ -244,7 +244,7 @@ export default function RotatableSphere({
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
         alpha: true,
-        powerPreference: "high-performance"
+        powerPreference: "high-performance",
       });
 
       renderer.setSize(width, height);
@@ -272,14 +272,11 @@ export default function RotatableSphere({
 
       // Create sphere geometry with configurable radius
       const sphereGeometry = new THREE.SphereGeometry(sphereRadius, 64, 64);
-      
+
       // Create material with configurable textures
-      const materialProps: any = {
-        map: textureLoader.load(
-          textureUrl,
-          () => setLoading(false)
-        ),
-        shininess: 20
+      const materialProps: THREE.MeshPhongMaterialParameters = {
+        map: textureLoader.load(textureUrl, () => setLoading(false)),
+        shininess: 20,
       };
 
       // Add optional maps if provided
@@ -301,11 +298,15 @@ export default function RotatableSphere({
       scene.add(sphere);
 
       // Glow effect
-      const glowGeometry = new THREE.SphereGeometry(sphereRadius * 1.05, 32, 32);
+      const glowGeometry = new THREE.SphereGeometry(
+        sphereRadius * 1.05,
+        32,
+        32
+      );
       const glowMaterial = new THREE.ShaderMaterial({
         uniforms: {
           glowColor: { value: new THREE.Color(glowColor) },
-          viewVector: { value: camera.position }
+          viewVector: { value: camera.position },
         },
         vertexShader: `
           uniform vec3 viewVector;
@@ -326,7 +327,7 @@ export default function RotatableSphere({
         `,
         side: THREE.BackSide,
         blending: THREE.AdditiveBlending,
-        transparent: true
+        transparent: true,
       });
 
       const sphereGlow = new THREE.Mesh(glowGeometry, glowMaterial);
@@ -348,11 +349,14 @@ export default function RotatableSphere({
         if (!isDragging) return;
         const deltaMove = {
           x: event.clientX - previousMousePosition.x,
-          y: event.clientY - previousMousePosition.y
+          y: event.clientY - previousMousePosition.y,
         };
         sphereRotation.y += deltaMove.x * 0.01;
         sphereRotation.x += deltaMove.y * 0.01;
-        sphereRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, sphereRotation.x));
+        sphereRotation.x = Math.max(
+          -Math.PI / 2,
+          Math.min(Math.PI / 2, sphereRotation.x)
+        );
         previousMousePosition = { x: event.clientX, y: event.clientY };
       };
 
@@ -369,7 +373,7 @@ export default function RotatableSphere({
           isDragging = true;
           previousMousePosition = {
             x: event.touches[0].clientX,
-            y: event.touches[0].clientY
+            y: event.touches[0].clientY,
           };
         }
       };
@@ -378,14 +382,17 @@ export default function RotatableSphere({
         if (!isDragging || event.touches.length !== 1) return;
         const deltaMove = {
           x: event.touches[0].clientX - previousMousePosition.x,
-          y: event.touches[0].clientY - previousMousePosition.y
+          y: event.touches[0].clientY - previousMousePosition.y,
         };
         sphereRotation.y += deltaMove.x * 0.01;
         sphereRotation.x += deltaMove.y * 0.01;
-        sphereRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, sphereRotation.x));
+        sphereRotation.x = Math.max(
+          -Math.PI / 2,
+          Math.min(Math.PI / 2, sphereRotation.x)
+        );
         previousMousePosition = {
           x: event.touches[0].clientX,
-          y: event.touches[0].clientY
+          y: event.touches[0].clientY,
         };
       };
 
@@ -457,11 +464,11 @@ export default function RotatableSphere({
   }, [textureUrl, bumpMapUrl, specularMapUrl, glowColor, sphereRadius]);
 
   return (
-    <div 
+    <div
       className={`relative bg-transparent ${className}`}
-      style={{ 
-        width: typeof width === 'number' ? `${width}px` : width,
-        height: typeof height === 'number' ? `${height}px` : height
+      style={{
+        width: typeof width === "number" ? `${width}px` : width,
+        height: typeof height === "number" ? `${height}px` : height,
       }}
     >
       {loading && (
@@ -469,10 +476,10 @@ export default function RotatableSphere({
           <div className="text-white text-xl">Loading...</div>
         </div>
       )}
-      <div 
-        ref={mountRef} 
+      <div
+        ref={mountRef}
         className="w-full h-full cursor-grab active:cursor-grabbing"
-        style={{ background: 'transparent' }}
+        style={{ background: "transparent" }}
       />
     </div>
   );

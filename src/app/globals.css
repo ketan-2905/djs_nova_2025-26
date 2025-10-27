@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=BBH+Sans+Bartle&display=swap');
 
 :root {
   --background: #ffffff;
@@ -98,3 +97,21 @@ body {
 @keyframes fadeOut {
   to { opacity: 0; visibility: hidden; }
 }
+
+/* Flip card utilities */
+.perspective {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+

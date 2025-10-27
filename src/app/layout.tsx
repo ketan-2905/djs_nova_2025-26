@@ -70,7 +70,9 @@ export default function RootLayout({
         <div className="relative bg-[url('/bg/space_bg.gif')] bg-auto bg-repeat bg-left-top overflow-hidden ">
         {/* <IntroOverlay /> */}
         <Navbar />
-        {children}
+        <div className="mt-[56px]">
+          {children}
+        </div>
       <Footer />
         </div>
       </body>
